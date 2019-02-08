@@ -20,6 +20,12 @@ class Pxz(MakefilePackage):
 
     conflicts('platform=darwin', msg='Pxz runs only on Linux.')
 
+    def build (self, spec, prefix):
+        filter_file('LDFLAGS\+=-llzma',
+            'LDFLAGS+=-L {0} -llzma'.format(spec['xz'].prefix.lib),
+            'Makefile')
+        make()
+
     def install(self, spec, prefix):
         make('install', "DESTDIR=%s" % prefix,
              "BINDIR=/bin", "MANDIR=/share/man")
